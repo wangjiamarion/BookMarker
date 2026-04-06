@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visit Sites Map - Gardena</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    #map { height: 100vh; width: 100%; }
+    .info-panel {
+      position: absolute; top: 10px; right: 10px; z-index: 1000;
+      background: white; padding: 12px 16px; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3); max-width: 300px;
+    }
+    .info-panel h3 { margin: 0 0 8px; font-size: 16px; }
+    .info-panel p { margin: 0; font-size: 13px; color: #555; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="info-panel">
+    <h3>Visit = Yes Sites (9)</h3>
+    <p>Gardena, CA - Addresses flagged for site visits</p>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const sites = [
+      {
+        item: 3, address: "16446 S. Western Avenue, Gardena, CA",
+        use: "DressMaker/Blinds", notes: "Pit Line Int'k Inc.", lookURM: "Yes",
+        lat: 33.8838, lng: -118.3093
+      },
+      {
+        item: 4, address: "16535 S Western Ave, Gardena, CA",
+        use: "Bar/Cocktails", notes: "Found this one down the street", lookURM: "Yes",
+        lat: 33.8823, lng: -118.3093
+      },
+      {
+        item: 6, address: "16520 S. Western Avenue, Gardena, CA",
+        use: "Vacant", notes: "", lookURM: "Yes",
+        lat: 33.8826, lng: -118.3093
+      },
+      {
+        item: 7, address: "16522 S. Western Avenue, Gardena, CA",
+        use: "Cocktail Lounge", notes: "Okinawa Association of America", lookURM: "No",
+        lat: 33.8825, lng: -118.3093
+      },
+      {
+        item: 9, address: "1004-1006 W. Gardena Blvd., Gardena, CA",
+        use: "1004/Empty-1006/Lounge", notes: "Only the lower front facade of 1006 has masonry", lookURM: "No",
+        lat: 33.8813, lng: -118.2922
+      },
+      {
+        item: 12, address: "1013-1017 W. Gardena Blvd., Gardena, CA",
+        use: "Furniture Store", notes: "$ Store/R & M Outlet Discount Store", lookURM: "No",
+        lat: 33.8816, lng: -118.2924
+      },
+      {
+        item: 15, address: "1036 W. Gardena Blvd., Gardena, CA",
+        use: "Offices", notes: "Florist - Only a small portion of the bottom has masonry", lookURM: "No",
+        lat: 33.8813, lng: -118.2929
+      },
+      {
+        item: 16, address: "1039 W. Gardena Blvd., Gardena, CA",
+        use: "Store", notes: "Sport Store", lookURM: "No",
+        lat: 33.8816, lng: -118.2930
+      },
+      {
+        item: 19, address: "1045 W. Gardena Blvd., Gardena, CA",
+        use: "Photo Supply", notes: "Store", lookURM: "No",
+        lat: 33.8816, lng: -118.2932
+      }
+    ];
+
+    const map = L.map('map').setView([33.8825, -118.3000], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    const markers = [];
+
+    sites.forEach(site => {
+      const marker = L.marker([site.lat, site.lng]).addTo(map);
+      marker.bindPopup(
+        `<b>Item #${site.item}</b><br>` +
+        `<b>${site.address}</b><br>` +
+        `Use: ${site.use}<br>` +
+        `Look URM: ${site.lookURM}<br>` +
+        (site.notes ? `Notes: ${site.notes}` : '')
+      );
+      markers.push(marker);
+    });
+
+    // Fit map to show all markers
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.15));
+  </script>
+</body>
+</html>
